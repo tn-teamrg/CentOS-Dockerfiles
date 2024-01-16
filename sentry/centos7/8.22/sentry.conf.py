@@ -40,8 +40,7 @@ import os.path
 
 CONF_ROOT = os.path.dirname(__file__)
 
-postgres = env('SENTRY_POSTGRES_HOST') or (env('POSTGRES_PORT_5432_TCP_ADDR') and 'postgres')
-if postgres:
+if postgres := env('SENTRY_POSTGRES_HOST') or (env('POSTGRES_PORT_5432_TCP_ADDR') and 'postgres'):
     DATABASES = {
         'default': {
             'ENGINE': 'sentry.db.postgres',
@@ -123,8 +122,7 @@ SENTRY_OPTIONS.update({
 # Sentry currently utilizes two separate mechanisms. While CACHES is not a
 # requirement, it will optimize several high throughput patterns.
 
-memcached = env('SENTRY_MEMCACHED_HOST') or (env('MEMCACHED_PORT_11211_TCP_ADDR') and 'memcached')
-if memcached:
+if memcached := env('SENTRY_MEMCACHED_HOST') or (env('MEMCACHED_PORT_11211_TCP_ADDR') and 'memcached'):
     memcached_port = (
         env('SENTRY_MEMCACHED_PORT')
         or '11211'
@@ -148,9 +146,8 @@ SENTRY_CACHE = 'sentry.cache.redis.RedisCache'
 # information on configuring your queue broker and workers. Sentry relies
 # on a Python framework called Celery to manage queues.
 
-rabbitmq = env('SENTRY_RABBITMQ_HOST') or (env('RABBITMQ_PORT_5672_TCP_ADDR') and 'rabbitmq')
 
-if rabbitmq:
+if rabbitmq := env('SENTRY_RABBITMQ_HOST') or (env('RABBITMQ_PORT_5672_TCP_ADDR') and 'rabbitmq'):
     BROKER_URL = (
         'amqp://' + (
             env('SENTRY_RABBITMQ_USERNAME')
@@ -223,8 +220,7 @@ SENTRY_DIGESTS = 'sentry.digests.backends.redis.RedisBackend'
 # Uploaded media uses these `filestore` settings. The available
 # backends are either `filesystem` or `s3`.
 
-filestorehost = env('SENTRY_FILE_HOST')
-if filestorehost:
+if filestorehost := env('SENTRY_FILE_HOST'):
      SENTRY_OPTIONS['filestore.backend'] = 's3'
      SENTRY_OPTIONS['filestore.options'] = {
           'access_key': env('SENTRY_FILE_ACCESS'),
@@ -264,8 +260,7 @@ SENTRY_WEB_OPTIONS = {
 ###############
 
 
-email = env('SENTRY_EMAIL_HOST') or (env('SMTP_PORT_25_TCP_ADDR') and 'smtp')
-if email:
+if email := env('SENTRY_EMAIL_HOST') or (env('SMTP_PORT_25_TCP_ADDR') and 'smtp'):
     SENTRY_OPTIONS['mail.backend'] = 'smtp'
     SENTRY_OPTIONS['mail.host'] = email
     SENTRY_OPTIONS['mail.password'] = env('SENTRY_EMAIL_PASSWORD') or ''
